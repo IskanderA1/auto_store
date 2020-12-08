@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kursach_avto_app/bloc/search_bloc.dart';
+import 'package:kursach_avto_app/bloc/car_bloc.dart';
+
 import 'package:kursach_avto_app/elements/loader.dart';
 import 'package:kursach_avto_app/model/car_response.dart';
 import 'package:kursach_avto_app/style/style.dart';
 import 'package:kursach_avto_app/model/car_model.dart';
+
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -12,17 +14,14 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
 
-
   @override
   void initState() {
-    searchBloc.getAllCars();
+    carsBloc.getAllCars();
     _searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
-  _onSearchChanged() {
-    
-  }
+  _onSearchChanged() {}
   @override
   void dispose() {
     ///_searchController.dispose();
@@ -33,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
         return false;
       },
       child: Scaffold(
@@ -100,28 +99,29 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   Widget _buildResultsList() {
     return StreamBuilder(
-      stream: searchBloc.subject,
-      // ignore: missing_return
-      builder: (context,AsyncSnapshot<CarsResponse> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.error != null &&
-              snapshot.data.error.length > 0) {
-            return Container();
+        stream: carsBloc.subject,
+        // ignore: missing_return
+        builder: (context, AsyncSnapshot<CarsResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              if(snapshot.data.error== "Loading"){
+                return buildLoadingWidget();
+              }
+              return Container();
+            }
+            return ListView.builder(
+                itemCount: snapshot.data.cars.length,
+                itemBuilder: (context, index) {
+                  return _buildCarItem(snapshot.data.cars[index]);
+                });
+          } else {
+            return buildLoadingWidget();
           }
-          return ListView.builder(
-              itemCount: snapshot.data.cars.length,
-              itemBuilder: (context, index) {
-                return _buildCarItem(snapshot.data.cars[index]);
-              });
-        }else{
-          return buildLoadingWidget();
-        }
-      }
-    );
+        });
   }
+
   Widget _buildCarItem(CarModel carModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
@@ -131,7 +131,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Row(
           children: [
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Container(
                 width: 110,
                 height: 140,
@@ -150,7 +150,7 @@ class _SearchScreenState extends State<SearchScreen> {
               width: 8,
             ),
             Expanded(
-              flex: 9,
+              flex: 7,
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8),
                 child: Align(
@@ -273,13 +273,33 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-
+            Expanded(
+              flex: 1,
+              child: Container(
+                width: 110,
+                height: 140,
+                child: GestureDetector(
+                  onTap: () {
+                    carsBloc.removeCar(carModel.id);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        bottomRight: Radius.circular(25)),
+                    child: Container(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
-

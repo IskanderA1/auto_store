@@ -110,6 +110,17 @@ class AppRepository {
     }
   }
 
+  Future<bool> removeCars(int idCars) async {
+    try {
+      Response response = await _dio.delete(getCarsUrl+"/$idCars");
+      print(response.data);
+      return true;
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return false;
+    }
+  }
+
   Future<bool> addCars(int modelID,File photo, String color, String power, String releaseYear,String price) async {
     List<int> imageBytes = photo.readAsBytesSync();
     String base64Image = base64Encode(imageBytes);

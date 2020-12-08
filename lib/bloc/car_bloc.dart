@@ -18,7 +18,22 @@ class CarsBloc {
     } else {
       _subject.sink.add(CarsResponse.withError("Неудача"));
     }
-    
+  }
+
+  getAllCars() async {
+    CarsResponse response = await _repository.getAllCars();
+    _subject.sink.add(response);
+  }
+
+  removeCar(int idCar) async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    bool isResponse = await _repository.removeCars(idCar);
+    if (isResponse) {
+      CarsResponse response = await _repository.getAllCars();
+      subject.sink.add(response);
+    } else {
+      _subject.sink.add(CarsResponse.withError("error"));
+    }
   }
 
   dispose() {
