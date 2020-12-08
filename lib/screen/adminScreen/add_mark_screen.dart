@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kursach_avto_app/bloc/mark_bloc.dart';
+import 'package:kursach_avto_app/bloc/model_bloc.dart';
 import 'package:kursach_avto_app/elements/loader.dart';
 import 'package:kursach_avto_app/model/mark_response.dart';
 import 'package:kursach_avto_app/style/style.dart';
@@ -14,6 +15,7 @@ class _AddMarkScreenState extends State<AddMarkScreen> {
   final _textCityController = TextEditingController();
   @override
   void initState() {
+    modelsBloc.getAllModels();
     marksBloc.getAllMarks();
     super.initState();
   }
@@ -30,7 +32,6 @@ class _AddMarkScreenState extends State<AddMarkScreen> {
     return Center(
       child: Column(
         children: [
-          Expanded(child: _buildResultsList()),
           Expanded(
             child: Column(
               children: [
@@ -39,7 +40,8 @@ class _AddMarkScreenState extends State<AddMarkScreen> {
                 _buildButtonSend(),
               ],
             ),
-          )
+          ),
+          Expanded(child: _buildResultsList()),
         ],
       ),
     );

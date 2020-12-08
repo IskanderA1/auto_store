@@ -174,7 +174,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Row(
                         children: [
                           Text(
-                            "Модель: ",
+                            "Мощность: ",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -183,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                           Text(
-                            "${carModel.modelName}",
+                            "${carModel.power}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -199,7 +199,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Row(
                         children: [
                           Text(
-                            "Кузов: ",
+                            "Год: ",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -208,7 +208,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                           Text(
-                            "${carModel.carBody}",
+                            "${carModel.releaseYear}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -249,7 +249,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Row(
                         children: [
                           Text(
-                            "В налчие: ",
+                            "Цена: ",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -258,7 +258,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                           Text(
-                            "${carModel.availability}",
+                            "${carModel.price}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,

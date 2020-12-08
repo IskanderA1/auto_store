@@ -4,24 +4,23 @@ import 'dart:typed_data';
 class CarModel {
   final int id;
   final String name;
-  final bool availability;
-  final String carBody;
+  final String releaseYear;
   final String color;
-  final String equipment;
+  final int price;
   final int modelId;
-  final String modelName;
-  final Uint8List photo;
+  final int power;
+  Uint8List photo;
 
-  CarModel(this.id, this.name, this.availability, this.carBody, this.color, this.equipment, this.modelId,this.modelName,this.photo);
+  CarModel(this.id, this.name, this.price, this.releaseYear, this.color,
+      this.modelId, this.power, this.photo);
 
   CarModel.fromJson(Map<String, dynamic> json)
       : id = json["id_car"],
         name = json["name"],
-        availability = json["availability"],
-        carBody = json["car_body"],
+        releaseYear = json["release_year"],
         color = json["color"],
-        equipment = json["equipment"],
+        price = json["price"],
         modelId = json["model_id"],
-        modelName = json["model_name"],
-        photo = base64Decode(json["photo"]);
+        power = json["power"],
+        photo = json["photo"] != null ? base64Decode(json["photo"]) : null;
 }
