@@ -5,22 +5,79 @@ import 'package:dio/dio.dart';
 import 'package:kursach_avto_app/model/car_response.dart';
 import 'package:kursach_avto_app/model/mark_response.dart';
 import 'package:kursach_avto_app/model/model_response.dart';
+import 'package:kursach_avto_app/model/user_response.dart';
 
 class AppRepository {
   static String mainUrl = "https://luxury-auto.herokuapp.com";
   var getCarsUrl = "$mainUrl/cars";
   var marksUrl = "$mainUrl/brands";
   var modelUrl = "$mainUrl/models";
-  
-  var headers = {
-    "Content-Type":"application/json"
-  };
+  var topTenUrl = "$mainUrl/top_10_luxury_auto";
+  var carsOfOneModelUrl = "$mainUrl/cars_of_one_model";
+  var modelsOfOneYearUrl = "$mainUrl/models_of_one_year";
+  var searchUrl = "$mainUrl/search";
+  var clientsUrl = "$mainUrl/clients";
+  var ordersUrl = "$mainUrl/orders";
+
+
+  var headers = {"Content-Type": "application/json"};
 
   final Dio _dio = Dio();
 
   Future<CarsResponse> getAllCars() async {
     try {
       Response response = await _dio.get(getCarsUrl);
+      return CarsResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CarsResponse.withError("$error");
+    }
+  }
+
+  Future<UserResponse> getAllUser() async {
+    try {
+      Response response = await _dio.get(clientsUrl);
+      return UserResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return UserResponse.withError("$error");
+    }
+  }
+
+  Future<CarsResponse> getTopTenCars() async {
+    try {
+      Response response = await _dio.get(topTenUrl);
+      return CarsResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CarsResponse.withError("$error");
+    }
+  }
+
+  Future<CarsResponse> getModelCars(int modelId) async {
+    try {
+      Response response = await _dio.get(carsOfOneModelUrl + "/$modelId");
+      return CarsResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CarsResponse.withError("$error");
+    }
+  }
+
+  Future<CarsResponse> getUserOrdersCar(int userID) async {
+    try {
+      Response response = await _dio.get(ordersUrl + "/$userID");
+      return CarsResponse.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CarsResponse.withError("$error");
+    }
+  }
+
+  Future<CarsResponse> getByNameCars(String name) async {
+    name = name.replaceAll(" ", "_");
+    try {
+      Response response = await _dio.get(searchUrl + "/$name");
       return CarsResponse.fromJson(response.data);
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
@@ -41,13 +98,12 @@ class AppRepository {
 
   Future<bool> addMark(String nameMark, String nameCity) async {
     var body = {
-      "name":"$nameMark",
-      "manufacturer-country":"$nameCity",
+      "name": "$nameMark",
+      "manufacturer-country": "$nameCity",
     };
     try {
-      Response response = await _dio.post(marksUrl,data: body,options: Options(
-        headers: headers
-      ));
+      Response response = await _dio.post(marksUrl,
+          data: body, options: Options(headers: headers));
       print(response.data);
       return true;
     } catch (error, stacktrace) {
@@ -55,10 +111,10 @@ class AppRepository {
       return false;
     }
   }
-  Future<bool> removeMark(int idMark) async {
 
+  Future<bool> removeMark(int idMark) async {
     try {
-      Response response = await _dio.delete(marksUrl+"/$idMark");
+      Response response = await _dio.delete(marksUrl + "/$idMark");
       print(response.data);
       return true;
     } catch (error, stacktrace) {
@@ -79,9 +135,8 @@ class AppRepository {
     }
   }
 
-
-
-  Future<bool> addModel(int brandId, String nameModel, String nameColor, String releaseYear) async {
+  Future<bool> addModel(int brandId, String nameModel, String nameColor,
+      String releaseYear) async {
     var body = {
       "name": "$nameModel",
       "possible_colors": "$nameColor",
@@ -89,9 +144,8 @@ class AppRepository {
       "brand_id": brandId,
     };
     try {
-      Response response = await _dio.post(modelUrl,data: body,options: Options(
-        headers: headers
-      ));
+      Response response = await _dio.post(modelUrl,
+          data: body, options: Options(headers: headers));
       print(response.data);
       return true;
     } catch (error, stacktrace) {
@@ -99,9 +153,10 @@ class AppRepository {
       return false;
     }
   }
+
   Future<bool> removeModel(int idModel) async {
     try {
-      Response response = await _dio.delete(modelUrl+"/$idModel");
+      Response response = await _dio.delete(modelUrl + "/$idModel");
       print(response.data);
       return true;
     } catch (error, stacktrace) {
@@ -112,7 +167,7 @@ class AppRepository {
 
   Future<bool> removeCars(int idCars) async {
     try {
-      Response response = await _dio.delete(getCarsUrl+"/$idCars");
+      Response response = await _dio.delete(getCarsUrl + "/$idCars");
       print(response.data);
       return true;
     } catch (error, stacktrace) {
@@ -121,7 +176,8 @@ class AppRepository {
     }
   }
 
-  Future<bool> addCars(int modelID,File photo, String color, String power, String releaseYear,String price) async {
+  Future<bool> addCars(int modelID, File photo, String color, String power,
+      String releaseYear, String price) async {
     List<int> imageBytes = photo.readAsBytesSync();
     String base64Image = base64Encode(imageBytes);
     var body = {
@@ -133,9 +189,8 @@ class AppRepository {
       "price": "$price"
     };
     try {
-      Response response = await _dio.post(getCarsUrl,data: body,options: Options(
-        headers: headers
-      ));
+      Response response = await _dio.post(getCarsUrl,
+          data: body, options: Options(headers: headers));
       print(response.data);
       return true;
     } catch (error, stacktrace) {

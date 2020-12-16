@@ -159,7 +159,8 @@ class _AddCarScreenState extends State<AddCarScreen> {
             }
 
             return DropdownButton<ModelModel>(
-              value: snapshot.data.models.first,
+              hint: Text("Модель"),
+              value: currMark,
               items: snapshot.data.models.map((ModelModel value) {
                 return new DropdownMenuItem<ModelModel>(
                   value: value,

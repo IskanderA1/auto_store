@@ -41,10 +41,10 @@ class _AddModelScreenState extends State<AddModelScreen> {
     
   
     return Center(
-      child: Column(
-        children: [
-          Container(
-            child: SingleChildScrollView(
+      child: SingleChildScrollView(
+              child: Column(
+          children: [
+            Container(
               child: Column(
                 children: [
                   _buildChoiceMark(),
@@ -56,16 +56,16 @@ class _AddModelScreenState extends State<AddModelScreen> {
                 
               ),
             ),
-          ),
-          SizedBox(
-            height: 1,
-            child: Container(
-              color: Style.titleColor,
+            SizedBox(
+              height: 1,
+              child: Container(
+                color: Style.titleColor,
+              ),
             ),
-          ),
-          Container(height: 160, child: _buildResultsList()),
-          
-        ],
+            Container(height: 160, child: _buildResultsList()),
+            
+          ],
+        ),
       ),
     );
   }
@@ -81,7 +81,8 @@ class _AddModelScreenState extends State<AddModelScreen> {
             }
             
             return DropdownButton<MarkModel>(
-              value: currMark==null?snapshot.data.marks.first:currMark,
+              hint: Text("Марка"),
+              value: currMark,
               items: snapshot.data.marks.map((MarkModel value) {
                 return new DropdownMenuItem<MarkModel>(
                   value: value,

@@ -29,19 +29,18 @@ class _AddMarkScreenState extends State<AddMarkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
+    return SingleChildScrollView(
+          child: Column(
         children: [
-          Expanded(
-            child: Column(
+          Column(
               children: [
                 _buildAddTextField(),
                 _buildAddCityTextField(),
                 _buildButtonSend(),
               ],
             ),
-          ),
-          Expanded(child: _buildResultsList()),
+          
+          _buildResultsList(),
         ],
       ),
     );
@@ -143,52 +142,55 @@ class _AddMarkScreenState extends State<AddMarkScreen> {
   }
 
   Widget _buildResultsList() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: StreamBuilder(
-          stream: marksBloc.subject,
-          // ignore: missing_return
-          builder: (context, AsyncSnapshot<MarkResponse> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return Container();
-              }
-              return ListView.builder(
-                  itemCount: snapshot.data.marks.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                        child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(child: Text(snapshot.data.marks[index].name)),
-                        Expanded(
-                            child: Text(
-                          snapshot.data.marks[index].manufacturerCountry != null
-                              ? snapshot.data.marks[index].manufacturerCountry
-                              : "",
-                          textAlign: TextAlign.center,
-                        )),
-                        Expanded(
-                          child: FlatButton(
-                            onPressed: () {
-                              marksBloc
-                                  .removeMark(snapshot.data.marks[index].id);
-                            },
-                            child: Text(
-                              "Удалить",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        )
-                      ],
-                    ));
-                  });
-            } else {
-              return buildLoadingWidget();
+    return Container(
+      height: 200,
+      child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: StreamBuilder(
+        stream: marksBloc.subject,
+        // ignore: missing_return
+        builder: (context, AsyncSnapshot<MarkResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.error != null &&
+                snapshot.data.error.length > 0) {
+              return Container();
             }
-          }),
+            return ListView.builder(
+                itemCount: snapshot.data.marks.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                      child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: Text(snapshot.data.marks[index].name)),
+                      Expanded(
+                          child: Text(
+                        snapshot.data.marks[index].manufacturerCountry != null
+                            ? snapshot.data.marks[index].manufacturerCountry
+                            : "",
+                        textAlign: TextAlign.center,
+                      )),
+                      Expanded(
+                        child: FlatButton(
+                          onPressed: () {
+                            marksBloc
+                                .removeMark(snapshot.data.marks[index].id);
+                          },
+                          child: Text(
+                            "Удалить",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      )
+                    ],
+                  ));
+                });
+          } else {
+            return buildLoadingWidget();
+          }
+        }),
+        ),
     );
   }
 }

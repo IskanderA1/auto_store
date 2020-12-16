@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kursach_avto_app/bloc/car_bloc.dart';
+import 'package:kursach_avto_app/bloc/model_bloc.dart';
+import 'package:kursach_avto_app/bloc/user_bloc.dart';
 
 import 'package:kursach_avto_app/elements/loader.dart';
 import 'package:kursach_avto_app/model/car_response.dart';
+import 'package:kursach_avto_app/model/model_model.dart';
+import 'package:kursach_avto_app/model/model_response.dart';
+import 'package:kursach_avto_app/model/user_model.dart';
+import 'package:kursach_avto_app/model/user_response.dart';
 import 'package:kursach_avto_app/style/style.dart';
 import 'package:kursach_avto_app/model/car_model.dart';
 
@@ -13,15 +19,31 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
+  ModelModel currMark;
+  UserModel currUser;
 
   @override
   void initState() {
     carsBloc.getAllCars();
+    modelsBloc.getAllModels();
+    usersBloc.getAllUser();
     _searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
-  _onSearchChanged() {}
+  _onSearchChanged() {
+    if (_searchController.text.isNotEmpty) {
+      carsBloc.getByNameCars(_searchController.text);
+    } else {
+      carsBloc.getAllCars();
+    }
+
+    setState(() {
+      currMark = null;
+      currUser = currUser;
+    });
+  }
+
   @override
   void dispose() {
     ///_searchController.dispose();
@@ -54,6 +76,14 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Container(
               child: _buildSearchTextField(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildButtonTopTenCars(),
+                _buildChoiceModelCars(),
+                _buildChoiceUserOrdersCars()
+              ],
             ),
             Expanded(
                 flex: 5,
@@ -106,7 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, AsyncSnapshot<CarsResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              if(snapshot.data.error== "Loading"){
+              if (snapshot.data.error == "Loading") {
                 return buildLoadingWidget();
               }
               return Container();
@@ -301,5 +331,99 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildButtonTopTenCars() {
+    return Padding(
+      padding: EdgeInsets.only(right: 15),
+      child: Container(
+        width: 100,
+        height: 40,
+        child: RaisedButton(
+          elevation: 5.0,
+          onPressed: () {
+            carsBloc.getTopTenCars();
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          color: Style.titleColor,
+          child: Text(
+            'Топ 10',
+            style: TextStyle(
+              color: Colors.white,
+              letterSpacing: 1.5,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChoiceModelCars() {
+    return StreamBuilder(
+        stream: modelsBloc.subject,
+        // ignore: missing_return
+        builder: (context, AsyncSnapshot<ModelResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              return Container();
+            }
+            return DropdownButton<ModelModel>(
+              hint: Text("Модель"),
+              value: currMark,
+              items: snapshot.data.models.map((ModelModel value) {
+                return new DropdownMenuItem<ModelModel>(
+                  value: value,
+                  child: new Text(value.name),
+                );
+              }).toList(),
+              onChanged: (value) {
+                carsBloc.getModelCars(value.id);
+                setState(() {
+                  currMark = value;
+                  currUser = null;
+                });
+              },
+            );
+          } else {
+            return buildLoadingWidget();
+          }
+        });
+  }
+
+  Widget _buildChoiceUserOrdersCars() {
+    return StreamBuilder(
+        stream: usersBloc.subject,
+        // ignore: missing_return
+        builder: (context, AsyncSnapshot<UserResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              return Container();
+            }
+            return DropdownButton<UserModel>(
+              hint: Text("Клиент"),
+              value: currUser,
+              items: snapshot.data.clients.map((UserModel value) {
+                return new DropdownMenuItem<UserModel>(
+                  value: value,
+                  child: new Text(value.surname),
+                );
+              }).toList(),
+              onChanged: (value) {
+                carsBloc.getUserOrdersCar(value.id);
+                setState(() {
+                  currMark = null;
+                  currUser = value;
+                });
+              },
+            );
+          } else {
+            return buildLoadingWidget();
+          }
+        });
   }
 }

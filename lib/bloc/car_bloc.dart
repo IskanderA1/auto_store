@@ -25,6 +25,30 @@ class CarsBloc {
     _subject.sink.add(response);
   }
 
+  getTopTenCars() async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    CarsResponse response = await _repository.getTopTenCars();
+    _subject.sink.add(response);
+  }
+
+  getModelCars(int modelId) async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    CarsResponse response = await _repository.getModelCars(modelId);
+    _subject.sink.add(response);
+  }
+  getByNameCars(String name) async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    CarsResponse response = await _repository.getByNameCars(name);
+    _subject.sink.add(response);
+  }
+
+  getUserOrdersCar(int userID) async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    CarsResponse response = await _repository.getUserOrdersCar(userID);
+    _subject.sink.add(response);
+  }
+ 
+
   removeCar(int idCar) async {
     _subject.sink.add(CarsResponse.withError("Loading"));
     bool isResponse = await _repository.removeCars(idCar);
