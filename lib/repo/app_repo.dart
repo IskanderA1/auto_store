@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:kursach_avto_app/model/car_response.dart';
 import 'package:kursach_avto_app/model/mark_response.dart';
 import 'package:kursach_avto_app/model/model_response.dart';
@@ -19,8 +20,7 @@ class AppRepository {
   var clientsUrl = "$mainUrl/clients";
   var ordersUrl = "$mainUrl/orders";
 
-
-  var headers = {"Content-Type": "application/json"};
+  var headers = {"Content-Type": "application/json","Accept":"*/*"};
 
   final Dio _dio = Dio();
 
@@ -197,5 +197,47 @@ class AppRepository {
       print("Exception occured: $error stackTrace: $stacktrace");
       return false;
     }
+  }
+
+  Future<bool> uppdateCar(int carID, String color, String power,
+      String releaseYear, String price) async {
+    var body = {
+      "color": "$color",
+      "power": "$power",
+      "price": "$price"
+    };
+    print(body);
+    print(getCarsUrl + "/$carID");
+    try {
+      Response response = await _dio.put(getCarsUrl + "/$carID",
+          data: body, options: Options(headers: headers));
+      print(response.data);
+      return true;
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return false;
+    }
+    // var client = http.Client();
+    // var body = {
+    //   'color': '$color',
+    //   'power': '$power',
+    //   'release_year': '$releaseYear',
+    //   'price': '$price'
+    // };
+    // print(body);
+    // print(getCarsUrl + "/$carID");
+    // try {
+    //   // Response response = await _dio.put(getCarsUrl + "/$carID",
+    //   //     data: body, options: Options(headers: headers));
+    //   var response = await client.put(getCarsUrl + "/$carID",
+    //       body: body);
+    //   print(response.body);
+    //   client.close();
+    //   return true;
+    // } catch (error, stacktrace) {
+    //   print("Exception occured: $error stackTrace: $stacktrace");
+    //   client.close();
+    //   return false;
+    // }
   }
 }

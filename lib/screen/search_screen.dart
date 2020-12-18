@@ -9,6 +9,7 @@ import 'package:kursach_avto_app/model/model_model.dart';
 import 'package:kursach_avto_app/model/model_response.dart';
 import 'package:kursach_avto_app/model/user_model.dart';
 import 'package:kursach_avto_app/model/user_response.dart';
+import 'package:kursach_avto_app/screen/detail_car.dart';
 import 'package:kursach_avto_app/style/style.dart';
 import 'package:kursach_avto_app/model/car_model.dart';
 
@@ -155,179 +156,189 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildCarItem(CarModel carModel) {
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-      child: Container(
-        height: 140,
-        decoration: kListItemBoxDecorationStyle,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                width: 110,
-                height: 140,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      bottomLeft: Radius.circular(25)),
-                  child: Image.memory(
-                    carModel.photo,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            Expanded(
-              flex: 7,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0, right: 8),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        carModel.name,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Style.standardTextColor,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Мощность: ",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.standardTextColor,
-                            ),
-                          ),
-                          Text(
-                            "${carModel.power}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.titleColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Год: ",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.standardTextColor,
-                            ),
-                          ),
-                          Text(
-                            "${carModel.releaseYear}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.titleColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Цвет: ",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.standardTextColor,
-                            ),
-                          ),
-                          Text(
-                            "${carModel.color}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.titleColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Цена: ",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.standardTextColor,
-                            ),
-                          ),
-                          Text(
-                            "${carModel.price}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Style.titleColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: 110,
-                height: 140,
-                child: GestureDetector(
-                  onTap: () {
-                    carsBloc.removeCar(carModel.id);
-                  },
+      child: GestureDetector(
+        onTap: () {
+         Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return DetailCar(carModel: carModel,);
+              }),
+            );
+        },
+          child: Container(
+          height: 140,
+          decoration: kListItemBoxDecorationStyle,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: Container(
+                  width: 110,
+                  height: 140,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25),
-                        bottomRight: Radius.circular(25)),
-                    child: Container(
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      ),
-                      color: Colors.red,
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25)),
+                    child: Image.memory(
+                      carModel.photo,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                width: 8,
+              ),
+              Expanded(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0, right: 8),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          carModel.name,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Style.standardTextColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Мощность: ",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.standardTextColor,
+                              ),
+                            ),
+                            Text(
+                              "${carModel.power}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.titleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Год: ",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.standardTextColor,
+                              ),
+                            ),
+                            Text(
+                              "${carModel.releaseYear}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.titleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Цвет: ",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.standardTextColor,
+                              ),
+                            ),
+                            Text(
+                              "${carModel.color}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.titleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Цена: ",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.standardTextColor,
+                              ),
+                            ),
+                            Text(
+                              "${carModel.price}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Style.titleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  width: 110,
+                  height: 140,
+                  child: GestureDetector(
+                    onTap: () {
+                      carsBloc.removeCar(carModel.id);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomRight: Radius.circular(25)),
+                      child: Container(
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -20,6 +20,17 @@ class CarsBloc {
     }
   }
 
+  uppdateCar(int carID,String color, String power,
+      String releaseYear, String price) async {
+    _subject.sink.add(CarsResponse.withError("Loading"));
+    
+     if (await _repository.uppdateCar(carID, color, power, releaseYear, price)) {
+      _subject.sink.add(CarsResponse.withError("Успешно"));
+    } else {
+      _subject.sink.add(CarsResponse.withError("Неудача"));
+    }
+  }
+
   getAllCars() async {
     CarsResponse response = await _repository.getAllCars();
     _subject.sink.add(response);
@@ -36,6 +47,7 @@ class CarsBloc {
     CarsResponse response = await _repository.getModelCars(modelId);
     _subject.sink.add(response);
   }
+
   getByNameCars(String name) async {
     _subject.sink.add(CarsResponse.withError("Loading"));
     CarsResponse response = await _repository.getByNameCars(name);
@@ -47,7 +59,6 @@ class CarsBloc {
     CarsResponse response = await _repository.getUserOrdersCar(userID);
     _subject.sink.add(response);
   }
- 
 
   removeCar(int idCar) async {
     _subject.sink.add(CarsResponse.withError("Loading"));
